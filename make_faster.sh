@@ -1,5 +1,7 @@
+sudo /etc/init.d/mysql stop
+sudo umount /var/ramfs
 sudo mkdir /var/ramfs
-sudo mount -t ramfs -o size=1G ramfs /var/ramfs/
+mount | grep "/var/ramfs" && echo "PROGRESS: looks like /var/ramfs is already mounted, something is fishy"; umount /var/ramfs;sudo mount -t ramfs -o size=1G ramfs /var/ramfs/ || sudo mount -t ramfs -o size=1G ramfs /var/ramfs/
 #sudo service mysql-server stop
 sudo /etc/init.d/mysql stop
 sudo cp -R /var/lib/mysql /var/ramfs/
@@ -20,11 +22,13 @@ sudo sed -i'-orig' 's/datadir.*.=.*/datadir = \/var\/ramfs\/mysql/g' /etc/mysql/
 echo "  /var/ramfs/mysql/ r,
   /var/ramfs/mysql/*.pid rw,
   /var/ramfs/mysql/** rwk," > mod_apparmor_usr.sbin.mysqld
-sudo grep -q '/var/ramfs/mysql' /etc/apparmor.d/usr.sbin.mysqld && echo "nothing to do already there" || sudo sed -i'-orig' '/  \/var\/lib\/mysql\/\*\* rwk,/r mod_apparmor_usr.sbin.mysqld' /etc/apparmor.d/usr.sbin.mysqld
+sudo grep -q '/var/ramfs/mysql' /etc/apparmor.d/usr.sbin.mysqld && echo "PROGRESS: apparmor profile already modified nothing to do here " || sudo sed -i'-orig' '/  \/var\/lib\/mysql\/\*\* rwk,/r mod_apparmor_usr.sbin.mysqld' /etc/apparmor.d/usr.sbin.mysqld
 
 #Looks like we're done with settings, let's see if it will work:
 
 sudo /etc/init.d/apparmor restart
+#disable sanity checking using df which will fail for ramfs
+sudo grep -q '#if LC_ALL=C BLOCKSIZE= df' /etc/init.d/mysql && echo "PROGRESS: already using modified mysql init.d script bypassing diskspace check" || sudo cp /etc/init.d/mysql /etc/init.d/dis.mysql; sudo cp init.mysql /etc/init.d/mysql
 sudo /etc/init.d/mysql start
 
 #If mysql daemon starts(double check /var/log/mysql.err for any errors)

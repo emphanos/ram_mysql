@@ -1,0 +1,3 @@
+  /var/ramfs/mysql/ r,
+  /var/ramfs/mysql/*.pid rw,
+  /var/ramfs/mysql/** rwk,
