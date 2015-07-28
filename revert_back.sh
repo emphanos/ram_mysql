@@ -23,6 +23,7 @@ sudo sed -i'-orig' 's/datadir.*.=.*/datadir = \/var\/lib\/mysql/g' /etc/mysql/my
 
 sudo /etc/init.d/apparmor restart
 sudo /etc/init.d/mysql start
+mysql -e "show variables where Variable_name = 'datadir';"
 
 #If mysql daemon starts(double check /var/log/mysql.err for any errors)
 #and you can connect to it, mostlikely now we're running fully off of a RAM device.

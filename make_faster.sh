@@ -30,6 +30,7 @@ sudo /etc/init.d/apparmor restart
 #disable sanity checking using df which will fail for ramfs
 sudo grep -q '#if LC_ALL=C BLOCKSIZE= df' /etc/init.d/mysql && echo "PROGRESS: already using modified mysql init.d script bypassing diskspace check" || sudo cp /etc/init.d/mysql /etc/init.d/dis.mysql; sudo cp init.mysql /etc/init.d/mysql
 sudo /etc/init.d/mysql start
+mysql -e "show variables where Variable_name = 'datadir';" | grep ramfs
 
 #If mysql daemon starts(double check /var/log/mysql.err for any errors)
 #and you can connect to it, mostlikely now we're running fully off of a RAM device.
