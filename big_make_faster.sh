@@ -1,10 +1,11 @@
 sudo /etc/init.d/mysql stop
 sudo umount /var/ramfs
 sudo mkdir /var/ramfs
-mount | grep "/var/ramfs" && echo "PROGRESS: looks like /var/ramfs is already mounted, something is fishy"; umount /var/ramfs;sudo mount -t ramfs -o size=1G ramfs /var/ramfs/ || sudo mount -t ramfs -o size=5G ramfs /var/ramfs/
+mount | grep "/var/ramfs" && echo "PROGRESS: looks like /var/ramfs is already mounted, something is fishy"; umount /var/ramfs;sudo mount -t ramfs -o size=5G ramfs /var/ramfs/ || sudo mount -t ramfs -o size=5G ramfs /var/ramfs/
 #sudo service mysql-server stop
 sudo /etc/init.d/mysql stop
 sudo cp -R /var/lib/mysql /var/ramfs/
+sudo mkdir /var/ramfs/log/
 sudo chown -R mysql:mysql /var/ramfs/
 #in file /etc/mysql/my.cnf
 #Find line with 'datadir' definition(it will look something like datadir = /var/lib/mysql) and change it to
@@ -12,6 +13,12 @@ sudo chown -R mysql:mysql /var/ramfs/
 #sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf-orig
 sudo sed -i'-orig' 's/datadir.*.=.*/datadir = \/var\/ramfs\/mysql/g' /etc/mysql/my.cnf
 sudo sed -i'-orig' 's/tmpdir.*.=.*/tmpdir = \/var\/ramfs/g' /etc/mysql/my.cnf
+sudo sed -i'-orig' 's/log_bin. \+=.*/log_bin = \/var\/ramfs\/log\/mariadb-bin/g' /etc/mysql/my.cnf
+sudo sed -i'-orig' 's/log_bin_index.*.=.*/log_bin_index = \/var\/ramfs\/log\/mariadb-bin.index/g' /etc/mysql/my.cnf
+
+#log_bin                 = /var/log/mysql/mariadb-bin
+#log_bin_index           = /var/log/mysql/mariadb-bin.index
+
 
 #Next step is to tune apparmor settings:
 
