@@ -10,6 +10,7 @@ sudo chown -R mysql:mysql /var/ramfs/mysql
 #datadir = /var/ramfs/mysql
 #sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf-orig
 sudo sed -i'-orig' 's/datadir.*.=.*/datadir = \/var\/lib\/mysql/g' /etc/mysql/my.cnf
+sudo sed -i'-orig' 's/tmpdir.*.=.*/tmpdir = \/tmp\//g' /etc/mysql/my.cnf
 
 #Next step is to tune apparmor settings:
 
@@ -24,6 +25,7 @@ sudo sed -i'-orig' 's/datadir.*.=.*/datadir = \/var\/lib\/mysql/g' /etc/mysql/my
 sudo /etc/init.d/apparmor restart
 sudo /etc/init.d/mysql start
 mysql -e "show variables where Variable_name = 'datadir';"
+mysql -e "show variables where Variable_name = 'tmpdir';"
 
 #If mysql daemon starts(double check /var/log/mysql.err for any errors)
 #and you can connect to it, mostlikely now we're running fully off of a RAM device.
