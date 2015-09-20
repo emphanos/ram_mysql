@@ -1,7 +1,7 @@
 sudo /etc/init.d/mysql stop
 sudo umount /var/ramfs
 sudo mkdir /var/ramfs
-mount | grep "/var/ramfs" && echo "PROGRESS: looks like /var/ramfs is already mounted, something is fishy"; umount /var/ramfs;sudo mount -t ramfs -o size=1G ramfs /var/ramfs/ || sudo mount -t ramfs -o size=1G ramfs /var/ramfs/
+mount | grep "/var/ramfs" && echo "PROGRESS: looks like /var/ramfs is already mounted, something is fishy"; umount /var/ramfs;sudo mount -t ramfs -o size=2G ramfs /var/ramfs/ || sudo mount -t ramfs -o size=2G ramfs /var/ramfs/
 #sudo service mysql-server stop
 sudo /etc/init.d/mysql stop
 sudo cp -R /var/lib/mysql /var/ramfs/
