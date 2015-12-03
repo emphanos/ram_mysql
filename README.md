@@ -23,7 +23,10 @@ To revert back to the previous disk bound datadir run:
 
 CAUTION:
 ========
-When your server reboots for some reason, you'll need to re-run
+When your server reboots for some reason, you'll loose your ramfs and
+thus your entire MySQL database! If you're doing import work or testing
+throughput, be sure to create a mysqldump to persist the database on
+disk. After a reboot of the server you'll need to re-run
 `make_faster.sh` since the ramfs system won't have been initialized at boot
 time. You might also see that the mysql server failed to start at reboot
-time since the /var/ramfs directory won't yet exist.
+time since the `/var/ramfs` directory won't yet exist.
